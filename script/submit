@@ -1,4 +1,0 @@
-#!/bin/bash
-SHELL_DIR=`dirname $0`
-source $SHELL_DIR/../venv/bin/activate
-pip freeze > requirement.txt
