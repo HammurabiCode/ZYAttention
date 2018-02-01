@@ -77,7 +77,7 @@ def history(request):
         player_id = request.GET.get('player_id', None)
         if player_id:
             q1 = AttApp.models.Score.objects.filter(player_id=player_id).order_by('-test')
-            print(len(q1))
+            # print(len(q1))
             for q in q1:
                 h = {}
                 h['date_time'] = q.test.date_time.strftime('%m-%d %H:%M:%S')
