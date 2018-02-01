@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <title>Welcome</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}">
+</head>
+<body>
+  <div class="ui menu">
+    <a class="item" href="/index/">Home</a>
+    <a class="item" href="/test_lib/">Test Lib</a>
+    <div class="right menu">
+      <a class="item">About Us</a>
+    </div>
+  </div>
+  <div class="ui text container">
+    <div class="ui text container">
+      <button id="start" class="fluid ui basic button">开始测试</button>
+      <div class="ui hidden divider"> </div>
+    </div>
+  </div>
+
+<div>
+  <div class="ui horizontal divider">测试成绩</div>
+</div>
+
+<div class="ui text container segments">
+  {% for t in tests %}
+  <div class="ui styled fluid accordion" id="test">
+    <div class="title">
+      <i class="dropdown icon"></i>
+      <span id="">{{ t.date_time }}</span>
+    </div>
+    <div class="content ui transition hidden list">
+      {% for sc in t.scores %}
+      <div class="item">
+        <div data="false" class="accordion" id="score">
+          <div class="title" id="player" data="{{sc.player}}">{{sc.player}} 成绩：{{sc.score}}ms</div>
+          <div class="content">
+            <canvas data="false" player_id="{{ sc.player }}" id="history_cvs" class="ui middle aligned">
+          </div>
+        </div>
+<!--         <div class="right floated content"> 
+          <div class="ui tiny primary button" data="{{ sc.player }}" id="history_btn">历史成绩</div>
+        </div>
+        <div class="bottom aligned content">
+          <div class="header">{{sc.player}}</div>
+          <div class="description">成绩：{{sc.score}}ms</div>
+        </div>
+ -->      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="ui long modal" id="history">
+  <div class="header">历史成绩</div>
+  <div class="image content">
+    <div class="ui fluid big image">
+      <canvas data="false" id="history_cvs" class="ui middle aligned">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+</body>
+  <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
+  <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+  <script type="text/javascript">
+    function getHistory(player_id) {
+      arrData = [];
+      arrMA = [];
+      arrAvg = [];
+      labels = [];
+      $.get('/history', {'player_id': player_id},
+        function(data, state){
+          if (state == 'success') {
+            var ma = 5;
+            mv_sum = 0;
+            total = 0
+            for (i in data.data) {
+              var rec = data.data[i];
+              labels.push(rec['date_time']);
+              arrData.push(rec.score);
+
+              mv_sum += rec.score;
+              total += rec.score;
+              arrAvg.push(NaN)
+              if (i < ma - 1) {
+                arrMA.push(null);
+              } else {
+                arrMA.push(mv_sum/parseFloat(ma));
+                mv_sum -= data.data[i-ma+1].score;
+              } 
+            }
+            arrAvg[0] = total/parseFloat(arrAvg.length);
+            arrAvg[arrAvg.length - 1] = arrAvg[0];
+            // for (i in arrAvg) {
+            //   arrAvg[i] = arrAvg[0]
+            // }
+            $.each($('[player_id='+player_id+']'), function(n, value) {
+              var myChart = new Chart(value.getContext('2d'), {
+                  type: 'line',
+                  data: {
+                      labels: labels,
+                      datasets: [{
+                          backgroundColor : "rgba(0,0,0,0)",
+                          fillColor : "rgba(255,0,0,1)",
+                          borderColor : "rgba(255,0,0,1)",
+                          pointColor : "rgba(151,187,205,1)",
+                          pointStrokeColor : "#fff",
+                          label: '反应时间(ms)',
+                          data: arrData,
+                      }, 
+                      {
+                          backgroundColor : "rgba(0,0,0,0)",
+                          fillColor : "rgba(151,187,205,0.0)",
+                          borderColor : "rgba(0,255,0,1)",
+                          pointColor : "rgba(151,187,205,1)",
+                          pointStrokeColor : "#fff",
+                          label: '平均反应时间('+ma+')(ms)',
+                          data: arrMA,
+                      }, 
+                      {
+                          backgroundColor : "rgba(0,0,0,0)",
+                          fillColor : "rgba(151,187,205,0.0)",
+                          borderColor : "rgba(0,0,255,1)",
+                          pointColor : "rgba(151,187,205,1)",
+                          pointStrokeColor : "#fff",
+                          label: '平均反应时间('+ma+')(ms)',
+                          data: arrAvg,
+                          spanGaps: true
+                      }]
+                  },
+                  options: {
+                    elements: {
+                      line: {
+                        tension:0,
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        ticks:{
+                          autoSkip: false,
+                        },
+                      }],
+                      yAxes: [{
+                        ticks:{
+                          autoSkip: false,
+                        },
+                      }]
+                    },
+                  }
+              });
+            });
+          }
+        }
+      );
+    }
+    window.onload = function() {
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          var cvs = $(mutation.target);
+          if (cvs.attr('data') == 'false') {
+            player_id = cvs.attr('player_id');
+            $.each($('[player_id='+player_id+']'), function(n, value) {
+              $(value).attr('data', 'true'); 
+            });
+            getHistory(player_id)
+          }
+        }); 
+      });
+      // configuration of the observer:
+      var config = { attributes: true, childList: true, characterData: true, onOpening: true };
+ 
+      // pass in the target node, as well as the observer options
+      $.each($('[id=history_cvs]'), function(n, value) {
+        observer.observe($(value).get(0), config);
+      });
+ 
+      $('[id=test]').accordion();
+      $('[id=player]').accordion();
+      $('#start').click(function(){
+        $('#history').modal('show');
+        $.get('/starttest', function(data, state) {
+          console.log(data + ':' + state);
+
+          if (data == 'true') {
+            console.log('start');
+          }
+          else {
+            console.log('no');
+          }
+        });
+      });
+    };
+  </script>
+  </html>

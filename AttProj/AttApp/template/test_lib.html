@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <title>Test Lib</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}">
+</head>
+<body>
+  <div class="ui menu">
+    <a class="item" href="/index/">Home</a>
+    <a class="item" href="/test_lib/">Test Lib</a>
+    <div class="right menu">
+      <a class="item">About Us</a>
+    </div>
+  </div>
+
+  <div class="ui text container">
+    <div class="ui top attached tabular menu">
+      <a class="item active" data-tab="math">数学</a>
+      <a class="item" data-tab="phys">物理</a>
+      <a class="item" data-tab="chem">化学</a>
+    </div>
+    <div class="ui bottom attached tab segment active" data-tab="math">
+      <div class="ui card">
+        <div class="content">
+          <h4 class="sub header">25×4÷25×4=?</h4>
+        </div>
+        <div class="content">
+          <div class="ui small feed">
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>A.</a> 0 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>B.</a> 1 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>C.</a> 16 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>D.</a> 625 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="content">
+            正确答案：C
+          </div>
+          <!-- <button class="ui button">Join Project</button> -->
+        </div>
+      </div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="phys">
+      <div class="ui card">
+        <div class="content">
+          <h4 class="sub header">以下导电性最好的金属是?</h4>
+        </div>
+        <div class="content">
+          <div class="ui small feed">
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>A.</a> 金 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>B.</a> 银 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>C.</a> 铜 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>D.</a> 铁 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="content">
+            正确答案：B
+          </div>
+          <!-- <button class="ui button">Join Project</button> -->
+        </div>
+      </div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="chem">
+      <div class="ui card">
+        <div class="content">
+          <h4 class="sub header">小苏打是?</h4>
+        </div>
+        <div class="content">
+          <div class="ui small feed">
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>A.</a> 碳酸氢钙 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>B.</a> 氢氧化钠 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>C.</a> 碳酸氢钠 </div>
+              </div>
+            </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary"><a>D.</a> 氢氧化钙 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="content">
+            正确答案：C
+          </div>
+          <!-- <button class="ui button">Join Project</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+  <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
+  <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+  <script type="text/javascript">
+    window.onload = function() {
+      $('.menu .item').tab();
+    }
+  </script>
+</html>
