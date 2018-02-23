@@ -12,7 +12,6 @@ def index(request):
     # test = AttApp.models.Test.objects.order_by('-date_time')
     if str_date_time:
         date_time=datetime.datetime.strptime(str_date_time, '%Y-%m-%d %H:%M:%S')
-        print(date_time)
         qs = AttApp.models.Test.objects.filter(date_time__year=date_time.year, 
             date_time__month=date_time.month, date_time__day=date_time.day,
             date_time__hour=date_time.hour, date_time__minute=date_time.minute,

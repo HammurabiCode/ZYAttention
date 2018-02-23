@@ -1,6 +1,6 @@
 #!/bin/sh
 # kill -HUP 15073
-NAME="ZY-01"
+NAME="ZY-02"
 DJANGODIR=~/Project/ZY-02-Attention/AttProj # Django project directory
 NUM_WORKERS=1 # how many worker processes should Gunicorn spawn
 DJANGO_SETTINGS_MODULE=AttProj.settings # which settings file should Django use
