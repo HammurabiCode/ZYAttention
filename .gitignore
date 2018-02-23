@@ -2,6 +2,5 @@ venv/*
 venv2/*
 AttProj/*/migrations/*
 AttProj/*/__pycache__/*
-AttProj/AttProj/db.sqlite3
 *.DS_Store
 *.pyc
