@@ -1,4 +1,6 @@
 venv/*
+venv2/*
+AttProj/*/migrations/*
 AttProj/*/__pycache__/*
 *.DS_Store
 *.pyc

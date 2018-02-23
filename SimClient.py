@@ -21,8 +21,16 @@ def addScore():
             'P07': randomScore()
             },
         }
-    resp = requests.post(host+'score', json=data)
-    print(resp)
+    with open('script/reaction_sample.json') as fp:
+        data = {
+            '1': randomScore(),
+            '2': randomScore(),
+            '3': randomScore(),
+            '4': randomScore()
+        }
+        print(data)
+        resp = requests.post(host+'score', json=data)
+        print(resp)
 
 
 def genPlayer():
@@ -39,5 +47,3 @@ def addPlayer(player_id):
 
 if __name__ == '__main__':
     addScore()
-    pass
-    # main()

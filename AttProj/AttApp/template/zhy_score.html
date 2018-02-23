@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<title>教师端口</title> 
+<head>
+  <h1>
+		<a href="/index">反应时间</a>
+		<a href="">答题情况</a>
+		<a href="/history">历史记录</a>
+	</h1>
+  <title>index</title>
+</head>
+<style type="text/css">
+  .seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: green;
+  }
+  .bujige_seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: red;
+  }
+  .sel_btn{
+    height: 21px;
+    line-height: 21px;
+    padding: 0 11px;
+    background: #02bafa;
+    border: 1px #26bbdb solid;
+    border-radius: 3px;
+    /*color: #fff;*/
+    display: inline-block;
+    text-decoration: none;
+    font-size: 12px;
+    outline: none;
+  }
+</style>
+<body>
+
+<p>测试时间为：{{ test_date_time }}</p>
+<table style="border:1px solid red">
+  <tr>
+    <td id="S1" class="seat"> Seat 1 </td>
+    <td id="S2" class="seat"> Seat 2 </td>
+  </tr>
+  <tr>
+    <td id="S3" class="seat"> Seat 3 </td>
+    <td id="S4" class="seat"> Seat 4 </td>
+  </tr>
+</table>
+<h3 id="zhengquelv"> </h3>
+<a class="sel_btn" href="/index">获取最近一次的测试结果</a>
+
+<script language="javascript">
+  // 1. 获取数据
+  var score_list = {"S1":0, "S2":0, "S3":0, "S4":0};
+  {% for rec in records %}
+    score_list["S"+{{ forloop.counter }}] = {{ rec.score }};
+  {% endfor %}
+  console.log(score_list);
+
+  for(var k in score_list){
+    // 2. 找到要改的元素
+    var seat = document.getElementById(k);
+    score = score_list[k];
+    // 3. 修改属性
+    seat.innerHTML = k + ": " + score + "ms";
+    if (score > 10 || score == 0) {
+      seat.className="bujige_seat"
+    } else {
+      seat.className="seat"
+    }
+  }
+
+  function refresh (){
+    // 1. 获取数据
+    var score_list = {"S1":19.1, "S2":20.3, "S3":29.8, "S4":24.4};
+    v = score_list["S2"];
+
+    for(var k in score_list){
+      // 2. 找到要改的元素
+      var seat = document.getElementById(k);
+      score = score_list[k];
+      // 3. 修改属性
+      if (score > 25) {
+        seat.className="bujige_seat"
+      } else {
+        seat.className="seat"
+      }
+    }
+    document.getElementById("zhengquelv").innerHTML = '反应时间情况如图所示Seat1=19.1 Seat2=20.3 Seat3=29.8 Seat4=24.4';
+  }
+</script>
+
+</body>
+</html>

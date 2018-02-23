@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<title>教师端口</title> 
+<head>
+  <h1>
+		<a href="反应时间.html">反应时间</a>
+		<a href="答题情况.html">答题情况</a>
+		<a href="历史纪录.html">历史纪录</a>
+	</h1>
+  <title>index</title>
+</head>
+<style type="text/css">
+  .seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: green;
+  }
+  .bujige_seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: red;
+  }
+</style>
+<body>
+
+
+<table style="border:1px solid red">
+  <tr>
+    <td id="S1" class="seat"> Seat 1 </td>
+    <td id="S2" class="seat"> Seat 2 </td>
+  </tr>
+  <tr>
+    <td id="S3" class="seat"> Seat 3 </td>
+    <td id="S4" class="seat"> Seat 4 </td>
+  </tr>
+</table>
+<h3 id="zhengquelv"> </h3>
+<button onclick="refresh();"> 刷新 </button>
+
+<script language="javascript">
+
+  function refresh (){
+    // 1. 获取数据
+    var chengjibiao = {"S1":10, "S2":20, "S3":30, "S4":40};
+    v = chengjibiao["S2"];
+
+    for(var k in chengjibiao){
+      // 2. 找到要改的元素
+      var seat = document.getElementById(k);
+      score = chengjibiao[k];
+      // 3. 修改属性
+      if (score > 20) {
+        seat.className="bujige_seat"
+      } else {
+        seat.className="seat"
+      }
+    }
+    document.getElementById("zhengquelv").innerHTML = '正确率为：10';
+  }
+</script>
+
+</body>
+</html>

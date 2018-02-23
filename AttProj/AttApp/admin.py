@@ -5,4 +5,4 @@ from AttApp.models import *
   
 admin.site.register(Player)  
 admin.site.register(Test)  
-admin.site.register(Score)  
+admin.site.register(ReactionScore)  

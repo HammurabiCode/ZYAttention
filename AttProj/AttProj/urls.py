@@ -15,14 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+# from AttApp.views import *
+import AttApp.zhy_views
 import AttApp.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/', AttApp.views.index),
+    url(r'^index/', AttApp.zhy_views.index),
+    url(r'^history/', AttApp.zhy_views.history),
     url(r'^starttest/', AttApp.views.startTest),
     url(r'^player/', AttApp.views.player),
     url(r'^score', AttApp.views.score),
-    url(r'^history', AttApp.views.history),
     url(r'^test_lib', AttApp.views.test_lib),
 ]

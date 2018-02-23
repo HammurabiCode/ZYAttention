@@ -1,5 +1,23 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+import AttApp.models
+import json
+import datetime
+
+name_list = {
+    '1': '赵一',
+    '2': '王二',
+    '3': '张三',
+    '4': '李四'
+}
+
+device_stu_no = {
+    '1': 'P01',
+    '2': 'P02',
+    '3': 'P03',
+    '4': 'P04'
+}
+
 
 # Create your views here.
 def index(request):
@@ -9,7 +27,7 @@ def index(request):
     for t in tests:
         t_data = {'date_time': t.date_time.strftime('%Y-%m-%d %H:%M:%S'),
         'scores':[]}
-        for sc in AttApp.models.Score.objects.filter(test=t).select_related():
+        for sc in AttApp.models.ReactionScore.objects.filter(test=t).select_related():
             t_data['scores'].append({'player':sc.player.player_id,
                 'score':sc.score})
 
@@ -20,44 +38,32 @@ def index(request):
 def startTest(request):
     return HttpResponse('true')
 
-import AttApp.models
-import json
-import datetime
 
 def score(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        strtime = data.get('date_time', None)
-        scores = data.get('scores', None)
-        if strtime and len(scores) > 0:
-            date_time = datetime.datetime.strptime(strtime, '%Y-%m-%d %H:%M:%S')
-            print(date_time)
-            t = AttApp.models.Test.objects.create(date_time=date_time)
-            cnt = 0
+        scores = json.loads(request.body)
+        t = AttApp.models.Test.objects.create(date_time=datetime.datetime.now)
+        cnt = 0
+        try:
             for p_id in scores:
-                p = AttApp.models.Player.objects.get(player_id=p_id)
+                p = AttApp.models.Player.objects.get(player_id=device_stu_no[p_id])
                 if not p:
                     continue
-
-                s = AttApp.models.Score.objects.create(player=p, test=t, score=scores[p_id])
+                s = AttApp.models.ReactionScore.objects.create(player=p, test=t, score=scores[p_id])
                 cnt += 1
-            pass
-            if cnt == 0:
-                t.delete()
-        else:
+        except Exception as e:
+            t.delete()
             return HttpResponse('No datetime recieved.')
-    return HttpResponse('ok')
-
-'''
-        strtime = request.POST.get('datetime', None)
-        if strtime:
-            d = datetime.datetime.strptime(strtime, '%Y-%m-%d %H:%M:%S')
-            t = models.Test(date_time=d)
+        else:
             t.save()
-            frame_dict = {i:int(request.POST.get(str(i))) for i in range(len(request.POST) - 1)}
-            for k, v in frame_dict.items():
-                models.Frame(test=t, no=k, height=v).save()
-'''
+        finally:
+            pass
+        if cnt == 0:
+            t.delete()
+            return HttpResponse('No datetime recieved.')
+        else:
+            t.save()
+    return HttpResponse('ok')
 
 
 def player(request):
@@ -76,7 +82,7 @@ def history(request):
     if request.method == 'GET':
         player_id = request.GET.get('player_id', None)
         if player_id:
-            q1 = AttApp.models.Score.objects.filter(player_id=player_id).order_by('-test')
+            q1 = AttApp.models.ReactionScore.objects.filter(player_id=player_id).order_by('-test')
             # print(len(q1))
             for q in q1:
                 h = {}
