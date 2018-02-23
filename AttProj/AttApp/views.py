@@ -40,7 +40,7 @@ def startTest(request):
 
 
 def score(request):
-    str_json = str(request.body)
+    str_json = str(request.body.decode('utf-8'))
     if request.method == 'POST':
         scores = json.loads(str_json)
         t = AttApp.models.Test.objects.create(date_time=datetime.datetime.now)
@@ -54,14 +54,14 @@ def score(request):
                 cnt += 1
         except Exception as e:
             t.delete()
-            return HttpResponse('No datetime recieved.')
+            return HttpResponse(str(e))
         else:
             t.save()
         finally:
             pass
         if cnt == 0:
             t.delete()
-            return HttpResponse('No datetime recieved.')
+            return HttpResponse('No student')
         else:
             t.save()
     return HttpResponse('ok')
@@ -69,13 +69,19 @@ def score(request):
 
 def player(request):
     q1=[]
+    str_resp = ''
     if request.method == 'POST':
         player_id = request.POST.get('player_id', None)
         if player_id:
             q1 = AttApp.models.Player.objects.filter(player_id=player_id)
             if len(q1) == 0:
                 AttApp.models.Player.objects.create(player_id=player_id)
-    return HttpResponse('OK')
+    elif request.method == 'GET':
+        player_list = AttApp.models.Player.objects.all()
+        str_resp = '{}\n{}'.format(str_resp, len(player_list))
+        for p in player_list:
+            str_resp = '{}\n{}'.format(str_resp, p.player_id)
+    return HttpResponse(str_resp)
 
 
 def history(request):
