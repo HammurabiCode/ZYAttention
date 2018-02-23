@@ -40,8 +40,9 @@ def startTest(request):
 
 
 def score(request):
+    str_json = str(request.body)
     if request.method == 'POST':
-        scores = json.loads(request.body)
+        scores = json.loads(str_json)
         t = AttApp.models.Test.objects.create(date_time=datetime.datetime.now)
         cnt = 0
         try:

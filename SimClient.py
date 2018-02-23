@@ -4,33 +4,25 @@ import random
 import requests
 
 host = 'http://127.0.0.1:8080/'
+ali_host = 'http://106.14.196.64:8081/'
 
 def randomScore():
     return int(random.random()*20)
 
 def addScore():
     data = {
-        'date_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'scores': {
-            'P01': randomScore(),
-            'P02': randomScore(),
-            'P03': randomScore(),
-            'P04': randomScore(),
-            'P05': randomScore(),
-            'P06': randomScore(),
-            'P07': randomScore()
-            },
-        }
-    with open('script/reaction_sample.json') as fp:
-        data = {
-            '1': randomScore(),
-            '2': randomScore(),
-            '3': randomScore(),
-            '4': randomScore()
-        }
-        print(data)
-        resp = requests.post(host+'score', json=data)
-        print(resp)
+        '1': randomScore(),
+        '2': randomScore(),
+        '3': randomScore(),
+        '4': randomScore()
+    }
+    headers = {'Content-type': 'application/json'}
+    # resp = requests.post(host+'score/', json=data, headers=headers)
+    resp = requests.post(ali_host+'score/', json=data, headers=headers)
+    print(resp.text)
+    with open('resp.html', 'w') as pf:
+        pf.write(resp.text)
+
 
 
 def genPlayer():
@@ -44,6 +36,20 @@ def addPlayer(player_id):
     }
     resp = requests.post(host+'player', data=data)
 
+def test():
+    data = {
+        '1': randomScore(),
+        '2': randomScore(),
+        '3': randomScore(),
+        '4': randomScore()
+    }
+    print(data)
+    headers = {'Content-type': 'application/json'}
+    resp = requests.post(ali_host+'starttest/', json=data, headers=headers)
+    with open('resp.html', 'w') as pf:
+        pf.write(resp.text)
+    print(resp)
 
 if __name__ == '__main__':
     addScore()
+    # test()
