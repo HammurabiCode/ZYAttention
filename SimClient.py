@@ -17,8 +17,8 @@ def addScore():
         '4': randomScore()
     }
     headers = {'Content-type': 'application/json'}
-    # resp = requests.post(host+'score/', json=data, headers=headers)
-    resp = requests.post(ali_host+'score/', json=data, headers=headers)
+    resp = requests.post(host+'test/', json=data, headers=headers)
+    # resp = requests.post(ali_host+'score/', json=data, headers=headers)
     print(resp.text)
     with open('resp.html', 'w') as pf:
         pf.write(resp.text)

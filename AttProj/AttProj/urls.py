@@ -21,10 +21,13 @@ import AttApp.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/', AttApp.zhy_views.index),
-    url(r'^history/', AttApp.zhy_views.history),
-    url(r'^starttest', AttApp.views.startTest),
+    url(r'^index/', AttApp.views.index),
+    url(r'^test/', AttApp.views.test),
+    url(r'^test_detail/', AttApp.views.test_detail),
+    # url(r'^test_detail/', AttApp.zhy_views.test_detail),
     url(r'^player/', AttApp.views.player),
     url(r'^score/', AttApp.views.score),
     url(r'^test_lib', AttApp.views.test_lib),
+    url(r'^init_db/', AttApp.views.init_db),
+    url(r'^clear_db/', AttApp.views.clear_db),
 ]

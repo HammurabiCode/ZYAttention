@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+  <title>Welcome</title> 
+</head>
+<style type="text/css">
+  .seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: green;
+  }
+  .bujige_seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: red;
+  }
+  .sel_btn{
+    height: 21px;
+    line-height: 21px;
+    padding: 0 11px;
+    background: #02bafa;
+    border: 1px #26bbdb solid;
+    border-radius: 3px;
+    /*color: #fff;*/
+    display: inline-block;
+    text-decoration: none;
+    font-size: 12px;
+    outline: none;
+  }
+</style>
+<body>
+  <h1>
+  </h1>
+  <p>系统中已有：</p>
+  <p>学生{{ student_cnt }}人。</p>
+  <p>反应力测试{{ test_cnt }}次。 <a href="/test/">查看记录</a></p>
+  <p>课堂问答{{ quiz_cnt }}次。<a href="/quiz/">查看记录</a></p>
+</body>
+</html>
