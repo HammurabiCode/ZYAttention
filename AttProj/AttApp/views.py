@@ -29,15 +29,20 @@ def test(request):
         return render(request, 'zhy/test.html', data)
     elif request.method == 'POST':
         str_json = str(request.body.decode('utf-8'))
-        scores = json.loads(str_json)
+        test_data = json.loads(str_json)
         t = AttApp.models.Test.objects.create(date_time=datetime.datetime.now)
         cnt = 0
         try:
-            for p_id in scores:
-                p = AttApp.models.Student.objects.get(stu_no=device_stu_no[p_id])
-                if not p:
-                    continue
-                s = AttApp.models.ReationTime.objects.create(stu=p, test=t, score=scores[p_id])
+            for dev_no in test_data:
+                dev = AttApp.models.Device.objects.get(dev_no=dev_no)
+                stu = AttApp.models.StuDevMap.objects.get(dev=dev).stu
+                react_data = {
+                    'stu':stu,
+                    'test':t,
+                    'score': test_data[dev_no],
+                    'dev': dev
+                }
+                react = AttApp.models.ReactionTime.objects.create(**react_data)
                 cnt += 1
         except Exception as e:
             t.delete()
