@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <title>课堂问答记录</title>
+</head>
+<body>
+  <a href="/index/">返回首页</a>
+  <h1>共有课堂问答{{ quiz_test_cnt }}次。</h1>
+
+  {% for qt in quiz_tests %}
+  <p>{{ forloop.counter }}. &nbsp;{{ qt.date_time }} <a href="/quiz_test_detail?date_time={{ qt.date_time }}">详情</a></p>
+  {% endfor %}
+
+
+</body>

@@ -24,9 +24,11 @@ urlpatterns = [
     url(r'^index/', AttApp.views.index),
     url(r'^test/', AttApp.views.test),
     url(r'^test_detail/', AttApp.views.test_detail),
-    # url(r'^test_detail/', AttApp.zhy_views.test_detail),
+    url(r'^quiz/', AttApp.views.quiz),
+    url(r'^quiz_test/', AttApp.views.quiz_test),
+    url(r'^quiz_test_detail/', AttApp.views.quiz_test_detail),
+    
     url(r'^player/', AttApp.views.player),
-    url(r'^score/', AttApp.views.score),
     url(r'^test_lib', AttApp.views.test_lib),
     url(r'^init_db/', AttApp.views.init_db),
     url(r'^clear_db/', AttApp.views.clear_db),

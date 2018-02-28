@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<title>教师端口</title> 
+<head>
+  <a href="/quiz_test/">返回问答历史</a>
+  <title>index</title>
+</head>
+<style type="text/css">
+  .seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: green;
+  }
+  .bujige_seat {
+    color: #000000;
+    width: 150px;
+    height: 100px;
+    border: #FF0000 solid;
+    background: red;
+  }
+  .sel_btn{
+    height: 21px;
+    line-height: 21px;
+    padding: 0 11px;
+    background: #02bafa;
+    border: 1px #26bbdb solid;
+    border-radius: 3px;
+    /*color: #fff;*/
+    display: inline-block;
+    text-decoration: none;
+    font-size: 12px;
+    outline: none;
+  }
+</style>
+<body>
+
+<p>测试时间为：{{ test_date_time }}</p>
+<table style="border:1px solid red">
+  <tr>
+
+  {% for answer in answers %}
+    <td id="{{ answer.stu_no }}" class="seat"></td>
+    {% if forloop.counter|add:forloop.counter == answers|length %}
+      </tr>
+      <tr>
+    {% endif %}
+
+  {% endfor %}
+  </tr>
+</table>
+<h3 id="zhengquelv"> </h3>
+
+<p>红色：答错。绿色：答对。</p>
+<p>{{ quiz.title }}</p>
+{% for k, v in quiz.options.items %}
+<p>{{ k }}.&nbsp;{{ v }}</p>
+{% endfor %}
+<p>正确答案：{{ quiz.answer }}</p>
+<!-- <a class="sel_btn" href="/index">获取最近一次的测试结果</a> -->
+
+<script language="javascript">
+  // 1. 获取数据
+  var answer_list = {};
+  {% for answer in answers %}
+    answer_list["{{ answer.stu_no }}"] = {
+      "time" : {{ answer.time }}, 
+      "choice" : "{{ answer.choice }}"
+    };
+  {% endfor %}
+
+  for(var k in answer_list){
+    // 2. 找到要改的元素
+    var seat = document.getElementById(k);
+    time = answer_list[k]["time"];
+    choice = answer_list[k]["choice"];
+    // 3. 修改属性
+    seat.innerHTML = k + ": " + choice + "耗时" + time + "ms.";
+    if (answer_list[k]["choice"] == "{{ quiz.answer }}") {
+      seat.className="seat"
+    } else {
+      seat.className="bujige_seat"
+    }
+  }
+</script>
+
+</body>
+</html>

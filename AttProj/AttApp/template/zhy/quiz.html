@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <title>问答题目列表</title>
+</head>
+<body>
+  <a href="/index/">返回首页</a>
+  <h1>共有问答题目{{ quiz_cnt }}道。</h1>
+
+  {% for q in quiz_list %}
+    <p>{{ forloop.counter }}.&nbsp;{{ q.title }} </p>
+    {% for k, v in q.options.items %}
+    <p>{{ k }}.&nbsp;{{ v }}</p>
+    {% endfor %}
+    <p>正确答案：{{ q.answer }}</p>
+  {% endfor %}
+
+
+</body>

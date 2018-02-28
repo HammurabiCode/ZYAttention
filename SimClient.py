@@ -9,7 +9,7 @@ ali_host = 'http://106.14.196.64:8081/'
 def randomScore():
     return int(random.random()*20)
 
-def addScore():
+def postTest():
     data = {
         '1': randomScore(),
         '2': randomScore(),
@@ -23,6 +23,33 @@ def addScore():
     with open('resp.html', 'w') as pf:
         pf.write(resp.text)
 
+def postQuiz():
+    data = {
+        'title':'导电性最好的金属是?',
+        'options':['金', '银', '铜', '铁'],
+        'answer':1
+    }
+    headers = {'Content-type': 'application/json'}
+    resp = requests.post(host+'quiz/', json=data, headers=headers)
+    # resp = requests.post(ali_host+'quiz/', json=data, headers=headers)
+    print(resp.text)
+    pass
+
+
+def postQuizTest():
+    data = {
+        '1': {'time':randomScore(), 'answer':'A'},
+        '2': {'time':randomScore(), 'answer':'B'},
+        '3': {'time':randomScore(), 'answer':'C'},
+        '4': {'time':randomScore(), 'answer':'D'},
+    }
+    print(data)
+    headers = {'Content-type': 'application/json'}
+    resp = requests.post(host+'quiz_test/', json=data, headers=headers)
+    # resp = requests.post(ali_host+'quiz_test/', json=data, headers=headers)
+    print(resp.text)
+    with open('resp.html', 'w') as pf:
+        pf.write(resp.text)
 
 
 def genPlayer():
@@ -51,5 +78,6 @@ def test():
     print(resp)
 
 if __name__ == '__main__':
-    addScore()
+    # postQuiz()
+    postQuizTest()
     # test()
