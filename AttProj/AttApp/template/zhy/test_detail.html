@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
-<title>教师端口</title> 
 <head>
-  <a href="/test/">返回测试列表</a>
-  <title>index</title>
+  <title>反应时间测试详情</title>
 </head>
 <style type="text/css">
   .seat {
@@ -36,42 +34,51 @@
   }
 </style>
 <body>
+<a href="/test/">返回测试列表</a>
 
 <p>测试时间为：{{ test_date_time }}</p>
 <table style="border:1px solid red">
   <tr>
-    <td id="S1" class="seat"> Seat 1 </td>
-    <td id="S2" class="seat"> Seat 2 </td>
-  </tr>
-  <tr>
-    <td id="S3" class="seat"> Seat 3 </td>
-    <td id="S4" class="seat"> Seat 4 </td>
+  {% for rec in records %}
+    <td id="{{ rec.stu_no }}" class="seat"></td>
+    {% if forloop.counter|add:forloop.counter == records|length %}
+      </tr>
+      <tr>
+    {% endif %}
+  {% endfor %}
   </tr>
 </table>
 <p>红色：反应时间≥10ms。绿色：反应时间<10ms。</p>
+<h3 id="zhengquelv"> </h3>
 <!-- <h3 id="zhengquelv"> </h3> -->
 <!-- <a class="sel_btn" href="/index">获取最近一次的测试结果</a> -->
 
 <script language="javascript">
   // 1. 获取数据
-  var score_list = {"S1":0, "S2":0, "S3":0, "S4":0};
+  var score_list = {};
   {% for rec in records %}
-    score_list["S"+{{ forloop.counter }}] = {{ rec.score }};
+    score_list["{{ rec.stu_no }}"] = {
+      "time" : {{ rec.time }}, 
+    };
   {% endfor %}
-  console.log(score_list);
 
-  for(var k in score_list){
+
+  var zhengque_cnt = 0;
+  for(var stu_no in score_list){
     // 2. 找到要改的元素
-    var seat = document.getElementById(k);
-    score = score_list[k];
+    var seat = document.getElementById(stu_no);
+    score = score_list[stu_no]["time"];
     // 3. 修改属性
-    seat.innerHTML = k + ": " + score + "ms";
+    seat.innerHTML = stu_no + ": " + score + "ms";
     if (score > 10 || score == 0) {
-      seat.className="bujige_seat"
+      seat.className="bujige_seat";
     } else {
-      seat.className="seat"
+      seat.className="seat";
+      zhengque_cnt += 1;
     }
   }
+  var zhengquelv = document.getElementById('zhengquelv');
+  zhengquelv.innerHTML = "全班合格率为" + ((zhengque_cnt*100).toFixed(4)/Object.keys(score_list).length).toFixed(2) + "%.";
 
   function refresh (){
     // 1. 获取数据

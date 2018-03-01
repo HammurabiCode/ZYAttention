@@ -45,8 +45,8 @@ def postQuizTest():
     }
     print(data)
     headers = {'Content-type': 'application/json'}
-    # resp = requests.post(host+'quiz_test/', json=data, headers=headers)
-    resp = requests.post(ali_host+'quiz_test/', json=data, headers=headers)
+    resp = requests.post(host+'quiz_test/', json=data, headers=headers)
+    # resp = requests.post(ali_host+'quiz_test/', json=data, headers=headers)
     print(resp.text)
     with open('resp.html', 'w') as pf:
         pf.write(resp.text)
@@ -80,5 +80,5 @@ def test():
 if __name__ == '__main__':
     # postQuiz()
     postTest()
-    # postQuizTest()
+    postQuizTest()
     # test()

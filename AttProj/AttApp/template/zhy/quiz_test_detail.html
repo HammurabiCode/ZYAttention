@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
-<title>教师端口</title> 
 <head>
-  <a href="/quiz_test/">返回问答历史</a>
-  <title>index</title>
+  <title>问答详情</title>
 </head>
 <style type="text/css">
   .seat {
@@ -36,7 +34,7 @@
   }
 </style>
 <body>
-
+<a href="/quiz_test/">返回问答历史</a>
 <p>测试时间为：{{ test_date_time }}</p>
 <table style="border:1px solid red">
   <tr>
@@ -71,6 +69,7 @@
     };
   {% endfor %}
 
+  zhengque_cnt = 0;
   for(var k in answer_list){
     // 2. 找到要改的元素
     var seat = document.getElementById(k);
@@ -79,11 +78,14 @@
     // 3. 修改属性
     seat.innerHTML = k + ": " + choice + "耗时" + time + "ms.";
     if (answer_list[k]["choice"] == "{{ quiz.answer }}") {
-      seat.className="seat"
+      seat.className="seat";
+      zhengque_cnt += 1;
     } else {
-      seat.className="bujige_seat"
+      seat.className="bujige_seat";
     }
   }
+  var zhengquelv = document.getElementById('zhengquelv');
+  zhengquelv.innerHTML = "全班正确率为" + ((zhengque_cnt*100).toFixed(4)/Object.keys(answer_list).length).toFixed(2) + "%.";
 </script>
 
 </body>

@@ -6,8 +6,7 @@ import datetime
 import random
 
 
-cur_quiz_id = 0
-
+cur_quiz_id = AttApp.models.Quiz.objects.all()[0].quiz_id if 0 < len(AttApp.models.Quiz.objects.all()) else 0
 
 # Create your views here.
 def index(request):
@@ -77,7 +76,11 @@ def test_detail(request):
 
     data = {'records':[], 'test_date_time':str_date_time}
     for sc in AttApp.models.ReactionTime.objects.filter(test=test).select_related()[0:4]:
-        data['records'].append({'stu':sc.stu.stu_no, 'score':sc.score})
+        rec_data = {
+            "stu_no":sc.stu.stu_no,
+            "time":sc.score,
+        }
+        data['records'].append(rec_data)
     return render(request, 'zhy/test_detail.html', data)
 
 
@@ -128,7 +131,6 @@ def quiz_test(request):
     elif request.method == 'POST':
         str_json = str(request.body.decode('utf-8'))
         scores = json.loads(str_json)
-        print(cur_quiz_id)
         quiz_test_data = {
             'date_time': datetime.datetime.now,
             'quiz': AttApp.models.Quiz.objects.get(quiz_id=cur_quiz_id)
@@ -195,12 +197,11 @@ def quiz_test_detail(request):
                 'time': a.time
             }
             data['answers'].append(answer_data)
-        print(data['answers'])
 
         return render(request, 'zhy/quiz_test_detail.html', data)
 
 
-def player(request):
+def stu_list(request):
     q1=[]
     str_resp = ''
     if request.method == 'POST':
@@ -210,11 +211,22 @@ def player(request):
             if len(q1) == 0:
                 AttApp.models.Student.objects.create(stu_no=stu_no)
     elif request.method == 'GET':
-        player_list = AttApp.models.Student.objects.all()
-        str_resp = '{}\n{}'.format(str_resp, len(player_list))
-        for p in player_list:
-            str_resp = '{}\n{}'.format(str_resp, p.stu_no)
-    return HttpResponse(str_resp)
+        data = {'stu_list':[]}
+        stu_list = AttApp.models.Student.objects.all()
+        for stu in stu_list:
+            dev = AttApp.models.StuDevMap.objects.filter(stu=stu)
+            if len(dev) > 0:
+                dev = ', '.join([d.dev.dev_no for d in dev])
+            else:
+                dev = ''
+            stu_data = {
+                'stu_no':stu.stu_no,
+                'name':stu.name,
+                'dev_no':dev
+            }
+            data['stu_list'].append(stu_data)
+        data['stu_cnt'] = len(data['stu_list'])
+    return render(request, 'zhy/stu_list.html', data)
 
 
 def history(request):
@@ -282,7 +294,6 @@ def init_db(request):
     quiz = AttApp.models.Quiz.objects.create(**quiz_data)
     global cur_quiz_id
     cur_quiz_id = quiz.quiz_id
-    print(cur_quiz_id)
 
     # 反应力测试
     test = AttApp.models.Test.objects.create(date_time=datetime.datetime.now)

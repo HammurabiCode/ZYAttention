@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^quiz_test/', AttApp.views.quiz_test),
     url(r'^quiz_test_detail/', AttApp.views.quiz_test_detail),
     
-    url(r'^player/', AttApp.views.player),
+    url(r'^stu_list/', AttApp.views.stu_list),
     url(r'^test_lib', AttApp.views.test_lib),
     url(r'^init_db/', AttApp.views.init_db),
     url(r'^clear_db/', AttApp.views.clear_db),
