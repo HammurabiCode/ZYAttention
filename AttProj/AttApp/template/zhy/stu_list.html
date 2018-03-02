@@ -5,15 +5,21 @@
   <title>学生列表</title>
 </head>
 <body>
+  <style type="text/css">
+    table,table tr th, table tr td { 
+      border:1px solid #0094ff;
+      align:center;
+    }
+  </style>
   <a href="/index/">返回首页</a>
   <h1>共有问答题目{{ stu_cnt }}道。</h1>
 
-<table style="border:1px solid red">
-
-  <tr>
-    <td>学号</td>
-    <td>姓名</td>
-    <td>使用的硬件设备编号</td>
+<table cellspacing="0" width="600px">
+  <tr style="border: 5px solid blue">
+    <th width="100px" >学号</th>
+    <th width="100px">姓名</th>
+    <th width="200px">硬件编号</th>
+    <th width="200px">历史数据</th>
   </tr>
 
   {% for stu in stu_list %}
@@ -21,6 +27,7 @@
     <td>{{ stu.stu_no }}</td>
     <td>{{ stu.name }}</td>
     <td>{{ stu.dev_no }} </td>
+    <td><a href="/download_student?stu_no={{ stu.stu_no }}">下载</a> </td>
   </tr>
   {% endfor %}
 </table>

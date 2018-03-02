@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+from django.http import FileResponse
 import AttApp.models
 import json
 import datetime
@@ -227,6 +228,62 @@ def stu_list(request):
             data['stu_list'].append(stu_data)
         data['stu_cnt'] = len(data['stu_list'])
     return render(request, 'zhy/stu_list.html', data)
+
+import openpyxl
+import xlwt
+
+def download_student(request):
+    stu_no = request.GET.get('stu_no')
+    if not stu_no:
+        return HttpResponse('No student no.')
+    res = AttApp.models.Student.objects.filter(stu_no = stu_no)
+    if len(res) != 1:
+        return HttpResponse('Invalid student no.')
+    stu = res[0]
+
+    file_name = stu_no + '.xls'
+    wb = xlwt.Workbook()
+
+    react_list = AttApp.models.ReactionTime.objects.filter(stu=stu)
+    react_list = sorted(react_list, key=lambda x: x.test.date_time)
+    ws = wb.add_sheet('反应力测试', cell_overwrite_ok=True)
+    ws.write(0, 0, '日期')
+    ws.write(0, 1, '反应时长(ms)')
+    ws.write(0, 2, '设备编号')
+    for ir, react in enumerate(react_list):
+        ws.write(ir+1, 0, react.test.date_time.strftime('%Y-%m-%d %H:%M:%S'))
+        ws.write(ir+1, 1, react.score)
+        ws.write(ir+1, 2, react.dev.dev_no)
+
+    quiz_answer_list = AttApp.models.QuizAnswer.objects.filter(stu=stu)
+    quiz_answer_list = sorted(quiz_answer_list, key=lambda x: x.quiz_test.date_time)
+
+    ws = wb.add_sheet('问答测试', cell_overwrite_ok=True)
+    ws.write(0, 0, '日期')
+    ws.write(0, 1, '反应时长(ms)')
+    ws.write(0, 2, '回答')
+    ws.write(0, 3, '题目编号')
+    ws.write(0, 4, '正确答案')
+    ws.write(0, 5, '正确与否')
+    ws.write(0, 6, '设备编号')
+    for ir, qa in enumerate(quiz_answer_list):
+        choice = chr(ord('A')+qa.choice)
+        answer = chr(ord('A')+qa.quiz_test.quiz.answer)
+        ws.write(ir+1, 0, qa.quiz_test.date_time.strftime('%Y-%m-%d %H:%M:%S'))
+        ws.write(ir+1, 1, qa.time)
+        ws.write(ir+1, 2, choice)
+        ws.write(ir+1, 3, qa.quiz_test.quiz.quiz_id)
+        ws.write(ir+1, 4, answer)
+        ws.write(ir+1, 5, 'Y' if answer==choice else 'N')
+        ws.write(ir+1, 6, qa.dev.dev_no)
+
+    wb.save(file_name)
+
+    file = open(file_name, 'rb')
+    resp = FileResponse(file)
+    resp ['content_type'] = 'application/octet-stream'
+    resp['Content-Disposition'] = 'attachment;filename='+file_name
+    return resp
 
 
 def history(request):

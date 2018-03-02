@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^quiz/', AttApp.views.quiz),
     url(r'^quiz_test/', AttApp.views.quiz_test),
     url(r'^quiz_test_detail/', AttApp.views.quiz_test_detail),
+    url(r'^download_student/', AttApp.views.download_student),
     
     url(r'^stu_list/', AttApp.views.stu_list),
     url(r'^test_lib', AttApp.views.test_lib),
